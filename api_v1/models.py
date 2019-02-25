@@ -2,6 +2,7 @@ from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.dispatch import receiver
 from django.db import models
 from django.db.models.signals import post_save
+from django.contrib.postgres.fields import ArrayField
 
 
 class UserManager(BaseUserManager):
@@ -161,3 +162,14 @@ class Vehicle(models.Model):
 
     class Meta:
         unique_together = (('source_id', 'vin'),)
+
+    
+class Job(models.Model):
+    job_scope = ArrayField(models.CharField())
+
+class Garage(models.Model):
+    name = models.CharField(max_length=255)
+    # locatioopening_i
+    opening_time = models.TimeField()
+    closing_time = models.TimeField()
+    specialty = ArrayField(models.CharField)

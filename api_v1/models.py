@@ -100,9 +100,6 @@ class Customer(AbstractUser):
 
 
 class Vehicle(models.Model):
-    proto_class = vehicle_pb2.Vehicle
-
-    objects = VehicleManager()
     is_active = models.BooleanField(null=False, blank=False, default=True, db_index=True)
 
     is_primary = models.BooleanField(default=True)
@@ -155,128 +152,9 @@ class Vehicle(models.Model):
     int_b_code = models.TextField()
     average_quadrant_premium = models.FloatField(default=0)
 
-    def __unicode__(self):
+    def __str__(self):                                                                        
         return "%s : %s %s %s %s" % (self.id, self.year, self.make, self.model, self.style)
 
-    @classmethod
-    def get_by_id(cls, vehicle_id):
-        return cls._get_queryset_get_job().get(pk=vehicle_id)
-
-    @classmethod
-    def _get_queryset_get_job(cls):
-        return InfiniteQuerySetGetJob(Vehicle, lifetime=settings.CACHE_LIFETIME_CARRIER,
-                                      tags=(settings.CACHE_TAGS['VEHICLE_QUERYSET'],))
-
-    @classmethod
-    def get_years(cls):
-        return cls._get_values_list_filter_job(values=('year',), order_by=('-year',), return_json=False).get()
-
-    @classmethod
-    def get_makes_for_year(cls, year, return_json=False):
-        return get_vehicle_json_info(select_values=('make',), order_by=('make',),
-                                     query_filter=(('year', year), ('is_active', True),),
-                                     selected_vehicle=str(year), return_json=return_json)
-
-    @classmethod
-    def get_models_for_make(cls, year, make, return_json=False):
-        return get_vehicle_json_info(select_values=('model',), order_by=('model',),
-                                     query_filter=(('year', year), ('make', make), ('is_active', True),),
-                                     selected_vehicle='{0} {1}'.format(year, make), return_json=return_json)
-
-    @classmethod
-    def get_by_vin_startswith_match(cls, vin, return_json):
-        return cls._get_values_list_filter_job(
-            values=('id', 'year', 'make', 'model', 'style', 'vin'),
-            order_by=('source_id', '-msrp'),
-            return_json=return_json,
-            distinct_on=('source_id',)).get(vin__startswith=str(vin).upper(), is_active=True)
-
-    @classmethod
-    def get_by_vin(cls, vin, return_json):
-        return cls._get_values_list_filter_job(
-            values=('id', 'year', 'make', 'model', 'style'),
-            order_by=('source_id', '-msrp'),
-            return_json=return_json,
-            distinct_on=('source_id',)).get(vin=vin, is_active=True)
-
-    @classmethod
-    def get_first_vehicle_id_by_vin_or_year_make_model(cls, vin, year, make, model):
-        vehicle_id = cls.get_first_vehicle_id_by_vin(vin)
-        if vehicle_id:
-            return vehicle_id
-        return cls.get_first_vehicle_id_for_model(year, make, model)
-
-    @classmethod
-    def get_first_vehicle_id_by_vin(cls, vin):
-        vehicle = cls.get_by_vin(vin, False)
-        if vehicle:
-            return vehicle[0][0]
-        return None  # for clarity
-
-    @classmethod
-    def get_first_vehicle_id_for_model(cls, year, make, model):
-        result = SearchQuerySet().using(settings.VEHICLE_INDEX) \
-            .models(Vehicle) \
-            .autocomplete(vehicle_display_name="%s %s %s" % (year, make, model)) \
-            .values('vehicle_id', 'vehicle_display_name')
-        if result and result[0]:
-            return result[0]['vehicle_id']
-        return None  # for clarity
-
-    @classmethod
-    def get_vehicle_id_closest_match_for_model(cls, year, make, model):
-        results = SearchQuerySet().using(settings.VEHICLE_INDEX) \
-            .models(Vehicle) \
-            .autocomplete(vehicle_display_name="%s %s %s" % (year, make, model)) \
-            .values('vehicle_id', 'vehicle_display_name')
-        # Let's get the closest match on year/make
-        for result in results:
-            display_name = result['vehicle_display_name']
-            if year in display_name and make.lower() in display_name.lower():
-                return result['vehicle_id']
-        return None  # for clarity
-
-    @classmethod
-    def get_vehicle_id_base_model_for_model(cls, year, make, model):
-        results = get_vehicle_json_info(
-            select_values=('id', 'style', 'source_id', 'vin'),
-            # order by msrp desc to match VehicleIndex (haystack search index)
-            order_by=('source_id', '-msrp'),
-            distinct_on=('source_id',),
-            query_filter=(('year', year),
-                          ('make', make),
-                          ('model', model),
-                          ('is_active', True)),
-            selected_vehicle='{0} {1} {2}'.format(year, make, model),
-            return_json=False
-        )
-        if results and results[0]:
-            return results[0][0]
-        return None  # for clarity
-
-    @classmethod
-    def get_submodels_for_model(cls, year, make, model, return_json=False):
-        return get_vehicle_json_info(
-            select_values=('id', 'style', 'source_id', 'vin'),
-            # order by msrp desc to match VehicleIndex (haystack search index)
-            order_by=('style', 'source_id', '-msrp'),
-            distinct_on=('style', 'source_id',),
-            query_filter=(('year', year),
-                          ('make', make),
-                          ('model', model),
-                          ('is_active', True)),
-            selected_vehicle='{0} {1} {2}'.format(year, make, model),
-            return_json=return_json
-        )
-
-    @classmethod
-    def _get_values_list_filter_job(cls, values, order_by, return_json, distinct_on=()):
-        return InfiniteQuerySetFilterValuesListJob(Vehicle, lifetime=settings.CACHE_LIFETIME_VEHICLE,
-                                                   tags=(settings.CACHE_TAGS['VEHICLE_QUERYSET'],),
-                                                   select_values=values,
-                                                   order_by=order_by,
-                                                   return_json=return_json,
-                                                   distinct_on=distinct_on)
 
     def natural_key(self):
         return self.source_id, self.vin

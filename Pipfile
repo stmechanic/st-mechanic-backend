@@ -1,26 +1,13 @@
 [[source]]
-url = "https://pypi.python.org/simple"
-verify_ssl = true
 name = "pypi"
-
-[packages]
-"flake8" = "*"
-django = "*"
-python-decouple = "*"
-dj-database-url = "*"
-coverage = "*"
-"psycopg2" = "*"
-coveralls = "*"
-djangorestframework = "*"
-pillow = "*"
-djangorestframework-jwt = "*"
-gunicorn = "*"
-sendgrid = "*"
-django-cors-headers = "*"
-django-pipeline = "*"
-pylint = "*"
+url = "https://pypi.org/simple"
+verify_ssl = true
 
 [dev-packages]
+pylint = "*"
+
+[packages]
+django = "*"
 
 [requires]
-python_version = "3.6"
+python_version = "3.7"

@@ -26,6 +26,9 @@ PREREQ_APPS = [
     'rest_framework.authtoken',
     'pipeline',
     'corsheaders',
+    'oauth2_provider',
+    'social_django',
+    'rest_framework_social_oauth2',
 ]
 
 PROJECT_APPS = [
@@ -34,7 +37,7 @@ PROJECT_APPS = [
 
 INSTALLED_APPS = PREREQ_APPS + PROJECT_APPS
 
-AUTH_USER_MODEL = 'api_v1.BankingUser'
+AUTH_USER_MODEL = 'api_v1.Customer'
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
@@ -70,10 +73,17 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect'
             ],
         },
     },
 ]
+
+AUTHENTICATION_BACKENDS = (
+    'rest_framework_social_oauth2.backends.DjangoOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+)
 
 WSGI_APPLICATION = 'bank.wsgi.application'
 
@@ -108,6 +118,8 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
+        'rest_framework_social_oauth2.authentication.SocialAuthentication'
     )
 }
 

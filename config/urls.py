@@ -20,4 +20,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
     path('api/v1/', include(('api_v1.urls', 'api_v1'), namespace='bank')),
+    path('api-auth/social/', include('rest_framework_social_oauth2.urls'))
 ]

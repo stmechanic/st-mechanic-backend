@@ -5,10 +5,13 @@ verify_ssl = true
 
 [dev-packages]
 pylint = "*"
+autopep8 = "*"
 
 [packages]
 django = "*"
 flake8 = "*"
+django-rest-framework-social-oauth2 = "*"
+python-decouple = "*"
 
 [requires]
 python_version = "3.7"

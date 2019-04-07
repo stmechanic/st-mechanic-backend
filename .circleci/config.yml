@@ -11,10 +11,10 @@ jobs:
       - image: circleci/postgres:9.4
         environment:
           ENV: test
-          TEST_DB:  bank_otuch_test.db
+          TEST_DB:  st_mechanic_test.db
           TEST_DB_USER: kiura
 
-    working_directory: ~/bank_otuch
+    working_directory: ~/st-mechanic-backend
 
     steps:
       - checkout

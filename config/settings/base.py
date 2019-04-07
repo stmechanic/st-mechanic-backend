@@ -1,6 +1,7 @@
 # flake8: noqa
 import os
 import datetime
+import django_heroku
 
 from decouple import config
 
@@ -164,3 +165,5 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATIC_ROOT = 'staticfiles'
+
+django_heroku.settings(locals())

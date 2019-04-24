@@ -25,13 +25,10 @@ class CustomerCreateViewSet(viewsets.ModelViewSet):
         name = user.first_name
         password = user.national_id
         email_to = user.email
-        verify_url = 'https://bank-otuch.herokuapp.com/api/v1/auth/verify/'
+        verify_url = 'https://st-mechanic-dev'
         subject = 'Please verify your account'
-        email_from = 'noreply@bank-otuch.com'
-        content = (f'Hello {name}. Welcome to Bank Otuch.'
-                   f'Your one time password is: {password}.'
-                   f'Visit {verify_url} to verify your account'
-                   f' and change your password.')
+        email_from = 'noreply@st-mechanic.com'
+        content = ''
         return send_mail(
             email_to=email_to,
             email_from=email_from,
@@ -48,15 +45,15 @@ class CustomerCreateViewSet(viewsets.ModelViewSet):
 
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
-            banking_user = Customer.objects.create_user(
+            garage_user = Customer.objects.create_user(
                 email=email,
                 date_of_birth=date_of_birth,
                 national_id=national_id,
                 first_name=first_name,
                 last_name=last_name
             )
-            if banking_user:  # send one-time password to user
-                self.send_one_time_password(user=banking_user)
+            if garage_user:  # send one-time password to user
+                self.send_one_time_password(user=garage_user)
 
             return Response(serializer.data,
                             status=status.HTTP_201_CREATED)

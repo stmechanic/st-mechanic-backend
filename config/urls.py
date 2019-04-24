@@ -1,4 +1,4 @@
-"""bank URL Configuration
+"""Garage app URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/2.0/topics/http/urls/
@@ -19,6 +19,6 @@ from django.urls import include, path
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
-    path('api/v1/', include(('api_v1.urls', 'api_v1'), namespace='bank')),
+    path('garage/', include(('garage.urls', 'garage'), namespace='garage')),
     path('api-auth/social/', include('rest_framework_social_oauth2.urls'))
 ]

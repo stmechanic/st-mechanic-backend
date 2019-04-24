@@ -1,6 +1,7 @@
 # flake8: noqa
 import os
 import datetime
+import django_heroku
 
 from decouple import config
 
@@ -24,7 +25,6 @@ PREREQ_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
-    'pipeline',
     'corsheaders',
     'oauth2_provider',
     'social_django',
@@ -32,12 +32,12 @@ PREREQ_APPS = [
 ]
 
 PROJECT_APPS = [
-    'api_v1',
+    'garage',
 ]
 
 INSTALLED_APPS = PREREQ_APPS + PROJECT_APPS
 
-AUTH_USER_MODEL = 'api_v1.Customer'
+# AUTH_USER_MODEL = 'garage.Customer'
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
@@ -60,7 +60,7 @@ CORS_ORIGIN_WHITELIST = (
     'herokuapp.com'
 )
 
-ROOT_URLCONF = 'bank.urls'
+ROOT_URLCONF = 'garage.urls'
 
 TEMPLATES = [
     {
@@ -85,7 +85,7 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
 )
 
-WSGI_APPLICATION = 'bank.wsgi.application'
+WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
     'default': {
@@ -165,3 +165,5 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATIC_ROOT = 'staticfiles'
+
+django_heroku.settings(locals())

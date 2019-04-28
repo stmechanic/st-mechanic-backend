@@ -6,7 +6,8 @@ from django.contrib.postgres.fields import ArrayField
 
 
 class Vehicle(models.Model):
-    is_active = models.BooleanField(null=False, blank=False, default=True, db_index=True)
+    is_active = models.BooleanField(
+        null=False, blank=False, default=True, db_index=True)
 
     is_primary = models.BooleanField(default=True)
     vin = models.CharField(max_length=50, db_index=True)
@@ -59,8 +60,8 @@ class Vehicle(models.Model):
     average_quadrant_premium = models.FloatField(default=0)
 
     def __str__(self):                                                                        
-        return "%s : %s %s %s %s" % (self.id, self.year, self.make, self.model, self.style)
-
+        return "%s : %s %s %s %s" % (
+            self.id, self.year, self.make, self.model, self.style)
 
     def natural_key(self):
         return self.source_id, self.vin

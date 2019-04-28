@@ -5,6 +5,49 @@ from django.db.models.signals import post_save
 from django.contrib.postgres.fields import ArrayField
 
 
+class GarageUserManager(BaseUserManager):
+    use_in_migrations = True
+
+    def _create_user(self, **fields):
+        """
+        Create and save a user with the given email and national_idself.
+        Use the national_id to set the initial password.
+        The user will get a prompt tp update their password on log in.
+        """
+        email = fields.get('email')
+        national_id = fields.get('national_id')
+        date_of_birth = fields.get('date_of_birth')
+        if not email:
+            raise ValueError("Email address is required")
+        if not national_id:
+            raise ValueError("National Id Number is required")
+        if not date_of_birth:
+            raise ValueError("Date of birth is required")
+
+        email = self.normalize_email(email)
+        user = self.model(**fields)
+        # set the national_id as the temporary password
+        user.set_one_time_password(national_id)
+        user.save(using=self._db)
+        return user
+
+    def create_user(self, **fields):
+        fields.setdefault('is_staff', False)
+        fields.setdefault('is_superuser', False)
+        return self._create_user(**fields)
+
+    def create_superuser(self, **fields):
+        fields.setdefault('is_staff', True)
+        fields.setdefault('is_superuser', True)
+
+        if fields.get('is_staff') is not True:
+            raise ValueError('Superuser must have is_staff=True.')
+        if fields.get('is_superuser') is not True:
+            raise ValueError('Superuser must have is_superuser=True.')
+
+        return self._create_user(**fields)
+
+
 class Vehicle(models.Model):
     is_active = models.BooleanField(
         null=False, blank=False, default=True, db_index=True)
@@ -74,9 +117,39 @@ class Job(models.Model):
     job_scope = ArrayField(models.CharField())
 
 
-class Garage(models.Model):
+class Garage(AbstractUser):
     name = models.CharField(max_length=255)
-    email = models.EmailField(_(""), max_length=254)
+    specialty = ArrayField(models.CharField)
+    username = None
+    email = models.EmailField(unique=True, max_length=254)
+    registration_number = models.CharField(max_length=20, unique=True)
+    physical_address = models.CharField(max_length=255, blank=True, null=True)
+    verified = models.BooleanField(default=False)
     opening_time = models.TimeField()
     closing_time = models.TimeField()
-    specialty = ArrayField(models.CharField)
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['name', 'registration_number', 'email']
+    objects = GarageUserManager()
+
+    @property
+    def is_verified(self):
+        return self.verified
+
+    def verify(self):
+        """
+        verify a garage user account.
+        An account is verified after the user has updated their password
+        """
+        self.verified = True
+        self.save()
+        return self.is_verified
+
+    def to_dict(self):
+        return {
+            'name': self.name,
+            'specialty': self.specialty,
+            'email': self.email,
+            'registration_number': self.registration_number,
+            'physical_address': self.physical_address
+        }

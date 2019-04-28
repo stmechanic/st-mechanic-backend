@@ -69,13 +69,14 @@ class Vehicle(models.Model):
     class Meta:
         unique_together = (('source_id', 'vin'),)
 
-    
-# class Job(models.Model):
-#     job_scope = ArrayField(models.CharField())
 
-# class Garage(models.Model):
-#     name = models.CharField(max_length=255)
-#     opening_time = models.TimeField()
-#     closing_time = models.TimeField()
-#     specialty = ArrayField(models.CharField)
-    
+class Job(models.Model):
+    job_scope = ArrayField(models.CharField())
+
+
+class Garage(models.Model):
+    name = models.CharField(max_length=255)
+    email = models.EmailField(_(""), max_length=254)
+    opening_time = models.TimeField()
+    closing_time = models.TimeField()
+    specialty = ArrayField(models.CharField)

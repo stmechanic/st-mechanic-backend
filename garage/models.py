@@ -127,6 +127,10 @@ class Garage(AbstractUser):
     verified = models.BooleanField(default=False)
     opening_time = models.TimeField()
     closing_time = models.TimeField()
+    active = models.BooleanField(default=False)
+    earnings = models.DecimalField()
+    commission_percentage = models.DecimalField()
+    commission = models.DecimalField()
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['name', 'registration_number', 'email']

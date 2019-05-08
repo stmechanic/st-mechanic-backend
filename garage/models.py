@@ -1,11 +1,11 @@
+"""Models for the Garaage module."""
 from django.contrib.auth.models import AbstractUser, BaseUserManager
-from django.dispatch import receiver
 from django.db import models
-from django.db.models.signals import post_save
 from django.contrib.postgres.fields import ArrayField
 
 
 class GarageUserManager(BaseUserManager):
+    """Garage user Manager."""
     use_in_migrations = True
 
     def _create_user(self, **fields):
@@ -32,6 +32,7 @@ class GarageUserManager(BaseUserManager):
         return user
 
     def create_user(self, **fields):
+        ""
         fields.setdefault('is_staff', False)
         fields.setdefault('is_superuser', False)
         return self._create_user(**fields)
@@ -119,7 +120,7 @@ class Job(models.Model):
 
 class Garage(AbstractUser):
     name = models.CharField(max_length=255)
-    specialty = ArrayField(models.CharField)
+    specialties = ArrayField(models.CharField)
     username = None
     email = models.EmailField(unique=True, max_length=254)
     registration_number = models.CharField(max_length=20, unique=True)

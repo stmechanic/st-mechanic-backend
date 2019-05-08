@@ -3,7 +3,7 @@ from rest_framework import serializers
 
 class GarageSerializer(serializers.ModelSerializer):
     name = serializers.CharField(max_length=255)
-    specialty = ArrayField(serializers.CharField)
+    specialties = serializers.ArrayField(serializers.CharField)
     username = None
     email = serializers.EmailField(unique=True, max_length=254)
     registration_number = serializers.CharField(max_length=20, unique=True)

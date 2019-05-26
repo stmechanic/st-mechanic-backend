@@ -83,7 +83,7 @@ class Garage(AbstractBaseUser):
     def to_dict(self):
         return {
             'name': self.name,
-            'specialty': self.specialty,
+            'specialty': self.specialties,
             'email': self.email,
             'registration_number': self.registration_number,
             'physical_address': self.physical_address

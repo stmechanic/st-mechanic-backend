@@ -81,6 +81,7 @@ class Garage(AbstractBaseUser):
         return self.is_verified
 
     def to_dict(self):
+        """Create a dict representation of a Garage."""
         return {
             'name': self.name,
             'specialty': self.specialties,

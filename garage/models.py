@@ -1,7 +1,6 @@
 """Models for the Garaage module."""
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.db import models
-from django.contrib.postgres.fields import ArrayField
 
 
 class GarageUserManager(BaseUserManager):
@@ -50,8 +49,8 @@ class GarageUserManager(BaseUserManager):
 
 
 class Garage(AbstractBaseUser):
+    """Represent a Garage."""
     name = models.CharField(max_length=255)
-    specialties = ArrayField(models.CharField(max_length=255))
     username = None
     email = models.EmailField(unique=True, max_length=255)
     registration_number = models.CharField(max_length=20, unique=True)
@@ -60,9 +59,9 @@ class Garage(AbstractBaseUser):
     opening_time = models.TimeField()
     closing_time = models.TimeField()
     active = models.BooleanField(default=False)
-    earnings = models.DecimalField()
-    commission_percentage = models.DecimalField()
-    commission = models.DecimalField()
+    earnings = models.FloatField(default=0, blank=True)
+    commission_percentage = models.FloatField(default=0, blank=True)
+    commission = models.FloatField(default=0, blank=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['name', 'registration_number', 'email']
@@ -89,7 +88,6 @@ class Garage(AbstractBaseUser):
             'registration_number': self.registration_number,
             'physical_address': self.physical_address
         }
-
 
 
 class Vehicle(models.Model):
@@ -160,7 +158,7 @@ class Vehicle(models.Model):
 
 class Job(models.Model):
     """Represent a vehicle job."""
-    job_scope = ArrayField(models.CharField(max_length=255))
+    job_scope = models.TextField()
     garage = models.ForeignKey(
         Garage, on_delete=models.CASCADE, related_name='jobs')
 
@@ -168,5 +166,5 @@ class Job(models.Model):
 class Specialty(models.Model):
     """Represent a Garage's specialty."""
     description = models.CharField(max_length=300)
-
-
+    garage = models.ForeignKey(
+        Garage, on_delete=models.CASCADE, related_name='specialties')

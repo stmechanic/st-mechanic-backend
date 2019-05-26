@@ -1,5 +1,5 @@
 """Models for the Garaage module."""
-from django.contrib.auth.models import AbstractUser, BaseUserManager
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
 
@@ -49,7 +49,51 @@ class GarageUserManager(BaseUserManager):
         return self._create_user(**fields)
 
 
+class Garage(AbstractBaseUser):
+    name = models.CharField(max_length=255)
+    specialties = ArrayField(models.CharField(max_length=255))
+    username = None
+    email = models.EmailField(unique=True, max_length=255)
+    registration_number = models.CharField(max_length=20, unique=True)
+    physical_address = models.CharField(max_length=255, blank=True, null=True)
+    verified = models.BooleanField(default=False)
+    opening_time = models.TimeField()
+    closing_time = models.TimeField()
+    active = models.BooleanField(default=False)
+    earnings = models.DecimalField()
+    commission_percentage = models.DecimalField()
+    commission = models.DecimalField()
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['name', 'registration_number', 'email']
+    objects = GarageUserManager()
+
+    @property
+    def is_verified(self):
+        return self.verified
+
+    def verify(self):
+        """
+        verify a garage user account.
+        An account is verified after the user has updated their password
+        """
+        self.verified = True
+        self.save()
+        return self.is_verified
+
+    def to_dict(self):
+        return {
+            'name': self.name,
+            'specialty': self.specialty,
+            'email': self.email,
+            'registration_number': self.registration_number,
+            'physical_address': self.physical_address
+        }
+
+
+
 class Vehicle(models.Model):
+    """Represent a vehicle instance."""
     is_active = models.BooleanField(
         null=False, blank=False, default=True, db_index=True)
 

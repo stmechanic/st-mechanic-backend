@@ -53,7 +53,7 @@ class Garage(AbstractBaseUser):
     name = models.CharField(max_length=255)
     username = None
     email = models.EmailField(unique=True, max_length=255)
-    registration_number = models.CharField(max_length=20, unique=True)
+    account_type = models.CharField(max_length=144, default='GARAGE')
     physical_address = models.CharField(max_length=255, blank=True, null=True)
     verified = models.BooleanField(default=False)
     opening_time = models.TimeField()

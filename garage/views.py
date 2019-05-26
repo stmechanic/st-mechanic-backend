@@ -4,16 +4,17 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
 from .models import Garage
+from .serializers import GarageSerializer
 
 
-class UserCreateViewSet(viewsets.ModelViewSet):
+class GarageCreateViewSet(viewsets.ModelViewSet):
     """
     API View that receives a POST with a user's username and password.
     Returns a JSON Web Token that can be used for authenticated requests..
     """
 
     queryset = Garage.objects.all().order_by('-date_joined')
-    serializer_class = UserSerializer
+    serializer_class = GarageSerializer
     permission_classes = (AllowAny,)
 
     def create(self, request):

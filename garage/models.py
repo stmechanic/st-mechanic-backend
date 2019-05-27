@@ -14,24 +14,24 @@ class GarageUserManager(BaseUserManager):
         The user will get a prompt tp update their password on log in.
         """
         email = fields.get('email')
-        national_id = fields.get('national_id')
-        date_of_birth = fields.get('date_of_birth')
+        name = fields.get('name')
+        password_one = fields.get('password1')
+        password_two = fields.get('password2')
+
         if not email:
             raise ValueError("Email address is required")
-        if not national_id:
-            raise ValueError("National Id Number is required")
-        if not date_of_birth:
-            raise ValueError("Date of birth is required")
+        if not name:
+            raise ValueError("Garage name is required")
+        if password_one != password_two:
+            raise ValueError("Both passwords need to match")
 
         email = self.normalize_email(email)
         user = self.model(**fields)
-        # set the national_id as the temporary password
-        user.set_one_time_password(national_id)
         user.save(using=self._db)
         return user
 
     def create_user(self, **fields):
-        ""
+        """."""
         fields.setdefault('is_staff', False)
         fields.setdefault('is_superuser', False)
         return self._create_user(**fields)
@@ -54,7 +54,7 @@ class Garage(AbstractBaseUser):
     username = None
     email = models.EmailField(unique=True, max_length=255)
     account_type = models.CharField(max_length=144, default='GARAGE')
-    physical_address = models.CharField(max_length=255, blank=True, null=True)
+    location = models.CharField(max_length=255, blank=True, null=True)
     verified = models.BooleanField(default=False)
     opening_time = models.TimeField()
     closing_time = models.TimeField()

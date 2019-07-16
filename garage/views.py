@@ -1,8 +1,8 @@
 """Garage API."""
 from rest_framework import viewsets
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework import status
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-
 from .models import Garage
 from .serializers import GarageSerializer
 
@@ -19,14 +19,19 @@ class GarageCreateViewSet(viewsets.ModelViewSet):
 
     def create(self, request):
         data = request.data
-        username, email = data.get('username'), data.get('email')
-        password, confirm_password = data.get('password'),\
-            data.get('confirm_password')
+        name, email = data.get('name'), data.get('email')
+        location = data.get('location')
+        password, confirm_password = data.get('password1'),\
+            data.get('password2')
         if password == confirm_password:
             serializer = self.get_serializer(data=data)
             if serializer.is_valid():
-                User.objects.create_user(username=username, password=password,
-                                         email=email)
+                Garage.objects.create_user(
+                    name=name,
+                    password=password,
+                    location=location,
+                    email=email
+                )
                 return Response(serializer.data,
                                 status=status.HTTP_201_CREATED)
             else:

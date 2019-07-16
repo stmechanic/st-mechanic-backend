@@ -1,67 +1,43 @@
-from rest_framework import status, viewsets
-from rest_framework.permissions import AllowAny, IsAuthenticated
+"""Garage API."""
+from rest_framework import viewsets
+from rest_framework import status
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
+from .models import Garage
+from .serializers import GarageSerializer
 
-from .models import Customer
-from .serializers import CustomerSerializer, CustomerVerifySerializer
-from .utils import send_mail
 
- 
-class CustomerCreateViewSet(viewsets.ModelViewSet):
+class GarageCreateViewSet(viewsets.ModelViewSet):
     """
-    API View that receives a POST with the following fields:
-        - email
-        - date of birth
-        - national id
-    Returns a one-time password that can be used for authenticated requests..
+    API View that receives a POST with a user's username and password.
+    Returns a JSON Web Token that can be used for authenticated requests..
     """
 
-    queryset = Customer.objects.all().order_by('-date_joined')
-    serializer_class = CustomerSerializer
+    queryset = Garage.objects.all().order_by('-date_joined')
+    serializer_class = GarageSerializer
     permission_classes = (AllowAny,)
 
-    @staticmethod
-    def send_one_time_password(user):
-        name = user.first_name
-        password = user.national_id
-        email_to = user.email
-        verify_url = 'https://st-mechanic-dev'
-        subject = 'Please verify your account'
-        email_from = 'noreply@st-mechanic.com'
-        content = ''
-        return send_mail(
-            email_to=email_to,
-            email_from=email_from,
-            content=content,
-            subject=subject
-        )
-
     def create(self, request):
-        email = request.data.get('email')
-        date_of_birth = request.data.get('date_of_birth')
-        national_id = request.data.get('national_id')
-        first_name = request.data.get('first_name')
-        last_name = request.data.get('last_name')
-
-        serializer = self.get_serializer(data=request.data)
-        if serializer.is_valid():
-            garage_user = Customer.objects.create_user(
-                email=email,
-                date_of_birth=date_of_birth,
-                national_id=national_id,
-                first_name=first_name,
-                last_name=last_name
-            )
-            if garage_user:  # send one-time password to user
-                self.send_one_time_password(user=garage_user)
-
-            return Response(serializer.data,
-                            status=status.HTTP_201_CREATED)
+        data = request.data
+        name, email = data.get('name'), data.get('email')
+        location = data.get('location')
+        password, confirm_password = data.get('password1'),\
+            data.get('password2')
+        if password == confirm_password:
+            serializer = self.get_serializer(data=data)
+            if serializer.is_valid():
+                Garage.objects.create_user(
+                    name=name,
+                    password=password,
+                    location=location,
+                    email=email
+                )
+                return Response(serializer.data,
+                                status=status.HTTP_201_CREATED)
+            else:
+                return Response({'error':
+                                 'The email was not valid.'},
+                                status=status.HTTP_400_BAD_REQUEST)
         else:
-            return Response({'error':
-                             serializer.errors},
+            return Response({'error': 'The passwords do not match'},
                             status=status.HTTP_400_BAD_REQUEST)
-
-
-
-

@@ -13,7 +13,7 @@ DEBUG = config('DEBUG', cast=bool)
 
 SENDGRID_API_KEY = config('SENDGRID_API_KEY')
 
-ALLOWED_HOSTS=['.localhost', '.herokuapp.com', '127.0.0.1']
+ALLOWED_HOSTS = ['.localhost', '.herokuapp.com', '127.0.0.1']
 
 # Application definition
 PREREQ_APPS = [
@@ -26,9 +26,9 @@ PREREQ_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'corsheaders',
-    'oauth2_provider',
-    'social_django',
-    'rest_framework_social_oauth2',
+    # 'oauth2_provider',
+    # 'social_django',
+    # 'rest_framework_social_oauth2',
 ]
 
 PROJECT_APPS = [
@@ -118,8 +118,9 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
-        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
-        'rest_framework_social_oauth2.authentication.SocialAuthentication'
+        # 'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication'
     )
 }
 

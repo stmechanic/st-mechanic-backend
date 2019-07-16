@@ -34,10 +34,8 @@ class GarageCreateViewSet(viewsets.ModelViewSet):
                 )
                 return Response(serializer.data,
                                 status=status.HTTP_201_CREATED)
-            else:
-                return Response({'error':
-                                 'The email was not valid.'},
-                                status=status.HTTP_400_BAD_REQUEST)
-        else:
-            return Response({'error': 'The passwords do not match'},
+            return Response({'error':
+                                'The email was not valid.'},
                             status=status.HTTP_400_BAD_REQUEST)
+        return Response({'error': 'The passwords do not match'},
+                        status=status.HTTP_400_BAD_REQUEST)

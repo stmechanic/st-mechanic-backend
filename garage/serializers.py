@@ -7,4 +7,4 @@ class GarageSerializer(serializers.ModelSerializer):
     """Serialize Garage instances."""
     class Meta:
         model = Garage
-        # fields = ('') 
+        fields = ('name', 'email', 'registration_number')

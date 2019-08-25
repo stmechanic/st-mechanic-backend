@@ -30,9 +30,6 @@ class GarageUserManager(BaseUserManager):
         return user
 
     def create_user(self, **fields):
-        """."""
-        # fields.setdefault('is_staff', False)
-        # fields.setdefault('is_superuser', False)
         return self._create_user(**fields)
 
     def create_superuser(self, **fields):

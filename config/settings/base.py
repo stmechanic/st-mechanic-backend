@@ -26,9 +26,6 @@ PREREQ_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'corsheaders',
-    # 'oauth2_provider',
-    # 'social_django',
-    # 'rest_framework_social_oauth2',
 ]
 
 PROJECT_APPS = [
@@ -37,7 +34,7 @@ PROJECT_APPS = [
 
 INSTALLED_APPS = PREREQ_APPS + PROJECT_APPS
 
-# AUTH_USER_MODEL = 'garage.Customer'
+AUTH_USER_MODEL = 'garage.Garage'
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
@@ -80,11 +77,6 @@ TEMPLATES = [
     },
 ]
 
-AUTHENTICATION_BACKENDS = (
-    'rest_framework_social_oauth2.backends.DjangoOAuth2',
-    'django.contrib.auth.backends.ModelBackend',
-)
-
 WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
@@ -117,9 +109,6 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
-        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
-        # 'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
-        'rest_framework.authentication.TokenAuthentication',
         'rest_framework_simplejwt.authentication.JWTAuthentication'
     )
 }

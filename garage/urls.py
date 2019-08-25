@@ -1,5 +1,4 @@
 """Garage endpoints."""
-from rest_framework.authtoken.views import obtain_auth_token
 from django.urls import path
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
@@ -7,9 +6,12 @@ from rest_framework_simplejwt.views import (
     TokenVerifyView
 )
 
+from .views import GarageCreateViewSet
+
 
 urlpatterns = [
-    path('garage/auth/login', obtain_auth_token, name='api_token_auth'),
-    path('api/token/', TokenObtainPairView.as_view(), name='obtain_token'),
-    path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
+    path('garage/auth/register', GarageCreateViewSet.as_view({'post': 'create'})),
+    path('garage/auth/login',  TokenObtainPairView.as_view(), name='api_token_auth'),
+    path('garage/auth/token/refresh', TokenRefreshView.as_view(), name='token_refresh'),
+    path('garage/auth/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
 ]

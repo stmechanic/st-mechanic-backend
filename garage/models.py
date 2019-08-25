@@ -151,14 +151,20 @@ class Job(models.Model):
     job_scope = models.TextField()
     garage = models.ForeignKey(
         Garage, on_delete=models.CASCADE, related_name='jobs')
-    customer_name = models.CharField(max_length=255)
-    vehicle = models.ForeignKey(Vehicle, on_delete=models.CASCADE, related_name='jobs')
+    customer_name = models.CharField(max_length=144)
+    vehicle = models.ForeignKey(Vehicle, on_delete=models.CASCADE, related_name='jobs', null=True)
     status = models.CharField(
-        max_length=10,
+        max_length=50,
         choices=[(tag, tag.value) for tag in JobStatus],
         default=JobStatus.INCOMING
     )
-    mechanic = models.CharField(max_length=255, null=True)
+    mechanic = models.CharField(max_length=144, null=True)
+
+
+class Rating(models.Model):
+    comment = models.CharField(max_length=255)
+    customer = models.CharField(max_length=144)
+    job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name='ratings')
 
 
 class Specialty(models.Model):

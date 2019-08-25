@@ -3,21 +3,32 @@ from django.db.utils import IntegrityError
 
 from rest_framework import viewsets
 from rest_framework import status
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
-from .models import Garage, Vehicle, Job
-from .serializers import GarageSerializer, VehicleSerializer, JobSerializer
+from .models import Garage, Vehicle, Job, Rating
+from .serializers import GarageSerializer, VehicleSerializer, JobSerializer, RatingSerializer
 
 
 class JobViewSet(viewsets.ModelViewSet):
     queryset = Job.objects.all().order_by('-date_created')
     serializer_class = JobSerializer
+    permission_classes = (IsAuthenticated, )
 
 
 class VehicleViewSet(viewsets.ModelViewSet):
     queryset = Vehicle.objects.all()
     serializer_class = VehicleSerializer
+
+
+class RatingViewSet(viewsets.ModelViewSet):
+    serializer_class = RatingSerializer
+    permission_classes = (IsAuthenticated, )
+
+    def list(self, request, *args, **kwargs):
+        queryset = Rating.objects.filter(job__garage=request.user)
+        serializer = RatingSerializer(queryset=queryset, many=True)
+        return Response(serializer.data)
 
 
 class GarageCreateViewSet(viewsets.ModelViewSet):
@@ -30,7 +41,7 @@ class GarageCreateViewSet(viewsets.ModelViewSet):
     serializer_class = GarageSerializer
     permission_classes = (AllowAny,)
 
-    def create(self, request):
+    def create(self, request, *args, **kwargs):
         data = request.data
         name, email = data.get('name'), data.get('email')
         location = data.get('location')

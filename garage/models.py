@@ -158,7 +158,7 @@ class Job(models.Model):
         choices=[(tag, tag.value) for tag in JobStatus],
         default=JobStatus.INCOMING
     )
-    mechanic = models.CharField(max_length=255)
+    mechanic = models.CharField(max_length=255, null=True)
 
 
 class Specialty(models.Model):

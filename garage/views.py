@@ -6,8 +6,13 @@ from rest_framework import status
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
-from .models import Garage, Vehicle
-from .serializers import GarageSerializer, VehicleSerializer
+from .models import Garage, Vehicle, Job
+from .serializers import GarageSerializer, VehicleSerializer, JobSerializer
+
+
+class JobViewSet(viewsets.ModelViewSet):
+    queryset = Job.objects.all().order_by('-date_created')
+    serializer_class = JobSerializer
 
 
 class VehicleViewSet(viewsets.ModelViewSet):

@@ -6,3 +6,9 @@ class JobStatus(Enum):
     ACCEPTED = "ACCEPTED"
     STARTED = "STARTED"
     COMPLETED = "COMPLETED"
+
+
+class QuoteStatus(Enum):
+    OPEN = "OPEN"
+    EXPIRED = "EXPIRED"
+    CLOSED = "CLOSED"

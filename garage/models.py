@@ -2,7 +2,7 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.db import models
 
-from garage.enums import JobStatus
+from garage.enums import JobStatus, QuoteStatus
 
 
 class GarageUserManager(BaseUserManager):
@@ -159,6 +159,17 @@ class Job(models.Model):
         default=JobStatus.INCOMING
     )
     mechanic = models.CharField(max_length=144, null=True)
+
+
+class Quote(models.Model):
+    amount = models.FloatField(default=0, blank=True)
+    status = models.CharField(
+        max_length=100,
+        choices=[(tag, tag.value) for tag in QuoteStatus],
+        default=QuoteStatus.OPEN
+    )
+    job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name='submitted_quotes')
+    garage = models.ForeignKey(Garage, on_delete=models.CASCADE, related_name='quotes')
 
 
 class Rating(models.Model):

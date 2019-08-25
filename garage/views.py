@@ -7,7 +7,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
 from .models import Garage, Vehicle, Job, Rating
-from .serializers import GarageSerializer, VehicleSerializer, JobSerializer, RatingSerializer
+from .serializers import GarageSerializer, VehicleSerializer, JobSerializer, RatingSerializer, QuoteSerializer
 
 
 class JobViewSet(viewsets.ModelViewSet):
@@ -29,6 +29,11 @@ class RatingViewSet(viewsets.ModelViewSet):
         queryset = Rating.objects.filter(job__garage=request.user)
         serializer = RatingSerializer(queryset=queryset, many=True)
         return Response(serializer.data)
+
+
+class QuoteViewSet(viewsets.ModelViewSet):
+    serializer_class = QuoteSerializer
+    permission_classes = (IsAuthenticated, )
 
 
 class GarageCreateViewSet(viewsets.ModelViewSet):

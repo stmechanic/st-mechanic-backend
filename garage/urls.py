@@ -6,7 +6,7 @@ from rest_framework_simplejwt.views import (
     TokenVerifyView
 )
 
-from .views import GarageCreateViewSet
+from .views import GarageCreateViewSet, VehicleViewSet
 
 
 urlpatterns = [
@@ -14,4 +14,6 @@ urlpatterns = [
     path('garage/auth/login',  TokenObtainPairView.as_view(), name='api_token_auth'),
     path('garage/auth/token/refresh', TokenRefreshView.as_view(), name='token_refresh'),
     path('garage/auth/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
+    path('garage/vehicles', VehicleViewSet.as_view({
+        'post': 'create'}))
 ]

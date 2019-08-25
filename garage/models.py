@@ -2,6 +2,8 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.db import models
 
+from garage.enums import JobStatus
+
 
 class GarageUserManager(BaseUserManager):
     """Garage user Manager."""
@@ -150,8 +152,13 @@ class Job(models.Model):
     garage = models.ForeignKey(
         Garage, on_delete=models.CASCADE, related_name='jobs')
     customer_name = models.CharField(max_length=255)
-    car_model = models.CharField(max_length=255)
-    actions = models.CharField(max_length=255)
+    vehicle = models.ForeignKey(Vehicle, on_delete=models.CASCADE, related_name='jobs')
+    status = models.CharField(
+        max_length=10,
+        choices=[(tag, tag.value) for tag in JobStatus],
+        default=JobStatus.INCOMING
+    )
+    mechanic = models.CharField(max_length=255)
 
 
 class Specialty(models.Model):

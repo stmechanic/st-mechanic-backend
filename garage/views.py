@@ -6,8 +6,13 @@ from rest_framework import status
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
-from .models import Garage
-from .serializers import GarageSerializer
+from .models import Garage, Vehicle
+from .serializers import GarageSerializer, VehicleSerializer
+
+
+class VehicleViewSet(viewsets.ModelViewSet):
+    queryset = Vehicle.objects.all()
+    serializer_class = VehicleSerializer
 
 
 class GarageCreateViewSet(viewsets.ModelViewSet):

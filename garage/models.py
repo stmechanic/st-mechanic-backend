@@ -9,9 +9,7 @@ class GarageUserManager(BaseUserManager):
 
     def _create_user(self, **fields):
         """
-        Create and save a user with the given email and national_idself.
-        Use the national_id to set the initial password.
-        The user will get a prompt tp update their password on log in.
+        Create and save a user with the given email.
         """
         email = fields.get('email')
         name = fields.get('name')
@@ -27,13 +25,14 @@ class GarageUserManager(BaseUserManager):
 
         email = self.normalize_email(email)
         user = self.model(**fields)
+        user.set_password(password_one)
         user.save(using=self._db)
         return user
 
     def create_user(self, **fields):
         """."""
-        fields.setdefault('is_staff', False)
-        fields.setdefault('is_superuser', False)
+        # fields.setdefault('is_staff', False)
+        # fields.setdefault('is_superuser', False)
         return self._create_user(**fields)
 
     def create_superuser(self, **fields):
@@ -54,17 +53,18 @@ class Garage(AbstractBaseUser):
     username = None
     email = models.EmailField(unique=True, max_length=255)
     account_type = models.CharField(max_length=144, default='GARAGE')
+    registration_number = models.CharField(max_length=144, blank=True, null=True)
     location = models.CharField(max_length=255, blank=True, null=True)
     verified = models.BooleanField(default=False)
-    opening_time = models.TimeField()
-    closing_time = models.TimeField()
+    opening_time = models.TimeField(null=True)
+    closing_time = models.TimeField(null=True)
     active = models.BooleanField(default=False)
-    earnings = models.FloatField(default=0, blank=True)
-    commission_percentage = models.FloatField(default=0, blank=True)
-    commission = models.FloatField(default=0, blank=True)
+    earnings = models.FloatField(default=0, blank=True, null=True)
+    commission_percentage = models.FloatField(default=0, blank=True, null=True)
+    commission = models.FloatField(default=0, blank=True, null=True)
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['name', 'registration_number', 'email']
+    REQUIRED_FIELDS = ['name', 'registration_number']
     objects = GarageUserManager()
 
     @property
@@ -87,7 +87,6 @@ class Garage(AbstractBaseUser):
             'specialty': self.specialties,
             'email': self.email,
             'registration_number': self.registration_number,
-            'physical_address': self.physical_address
         }
 
 

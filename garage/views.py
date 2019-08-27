@@ -7,7 +7,8 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
 from .models import Garage, Vehicle, Job, Rating
-from .serializers import GarageSerializer, VehicleSerializer, JobSerializer, RatingSerializer, QuoteSerializer
+from .serializers import GarageSerializer, VehicleSerializer, JobSerializer, RatingSerializer, QuoteSerializer, \
+    MechanicSerializer
 
 
 class JobViewSet(viewsets.ModelViewSet):
@@ -74,3 +75,8 @@ class GarageCreateViewSet(viewsets.ModelViewSet):
                             status=status.HTTP_400_BAD_REQUEST)
         return Response({'error': 'The passwords do not match'},
                         status=status.HTTP_400_BAD_REQUEST)
+
+
+class MechanicViewSet(viewsets.ModelViewSet):
+    serializer_class = MechanicSerializer
+    permission_classes = (IsAuthenticated, )

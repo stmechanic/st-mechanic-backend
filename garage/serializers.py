@@ -1,6 +1,6 @@
 """API Serializers."""
 from rest_framework import serializers
-from .models import Garage, Vehicle, Job, Rating, Quote
+from .models import Garage, Vehicle, Job, Rating, Quote, Mechanic
 
 
 class GarageSerializer(serializers.ModelSerializer):
@@ -31,4 +31,10 @@ class RatingSerializer(serializers.ModelSerializer):
 class QuoteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Quote
+        fields = '__all__'
+
+
+class MechanicSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Mechanic
         fields = '__all__'

@@ -1,4 +1,5 @@
 """Garage endpoints."""
+from django.contrib import admin
 from django.urls import path, include
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
@@ -23,6 +24,7 @@ schema_view = get_swagger_view(title='Garage API')
 
 urlpatterns = [
     path('garage/api/', include(router.urls)),
+    path('garage/admin/', admin.site.urls),
     path('garage/api/auth/register', GarageCreateViewSet.as_view({'post': 'create'})),
     path('garage/api/auth/login',  TokenObtainPairView.as_view(), name='api_token_auth'),
     path('garage/api/auth/token/refresh', TokenRefreshView.as_view(), name='token_refresh'),

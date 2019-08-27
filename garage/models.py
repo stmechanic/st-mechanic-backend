@@ -1,5 +1,5 @@
 """Models for the Garaage module."""
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.contrib.auth.models import BaseUserManager, AbstractUser
 from django.db import models
 
 from garage.enums import JobStatus, QuoteStatus
@@ -32,6 +32,8 @@ class GarageUserManager(BaseUserManager):
         return user
 
     def create_user(self, **fields):
+        fields.setdefault('is_staff', False)
+        fields.setdefault('is_superuser', False)
         return self._create_user(**fields)
 
     def create_superuser(self, **fields):
@@ -46,7 +48,7 @@ class GarageUserManager(BaseUserManager):
         return self._create_user(**fields)
 
 
-class Garage(AbstractBaseUser):
+class Garage(AbstractUser):
     """Represent a Garage."""
     name = models.CharField(max_length=255)
     username = None

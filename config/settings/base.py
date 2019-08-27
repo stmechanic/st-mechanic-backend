@@ -20,8 +20,8 @@ PREREQ_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
-    'django.contrib.sessions',
     'django.contrib.messages',
+    'django.contrib.sessions',
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
@@ -54,6 +54,7 @@ CORS_ORIGIN_ALLOW_ALL = False
 
 CORS_ORIGIN_WHITELIST = (
     'localhost:3000',
+    'localhost:8000',
     '192.168.0.17:3000',
     'herokuapp.com'
 )

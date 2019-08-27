@@ -191,3 +191,10 @@ class Specialty(models.Model):
         Garage, on_delete=models.CASCADE, related_name='specialties')
 
 
+class Payment(models.Model):
+    amount = models.FloatField(default=0, blank=True)
+    description = models.CharField(max_length=300)
+    source = models.CharField(max_length=300)
+    payee = models.CharField(max_length=300)
+    transaction_code = models.CharField(max_length=300)
+

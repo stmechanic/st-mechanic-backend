@@ -146,6 +146,12 @@ class Vehicle(models.Model):
         return f'{self.id}, {self.year}, {self.make}, {self.model}'
 
 
+class Mechanic(models.Model):
+    name = models.CharField(max_length=300)
+    email = models.CharField(max_length=300)
+    garage = models.ForeignKey(Garage, on_delete=models.CASCADE, related_name='mechanics')
+
+
 class Job(models.Model):
     """Represent a vehicle job."""
     job_scope = models.TextField()
@@ -158,7 +164,7 @@ class Job(models.Model):
         choices=[(tag, tag.value) for tag in JobStatus],
         default=JobStatus.INCOMING
     )
-    mechanic = models.CharField(max_length=144, null=True)
+    mechanic = models.ForeignKey(Mechanic, on_delete=models.SET_NULL, related_name='jobs', null=True)
 
 
 class Quote(models.Model):
@@ -183,3 +189,5 @@ class Specialty(models.Model):
     description = models.CharField(max_length=300)
     garage = models.ForeignKey(
         Garage, on_delete=models.CASCADE, related_name='specialties')
+
+

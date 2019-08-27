@@ -25,6 +25,7 @@ schema_view = get_swagger_view(title='Garage API')
 urlpatterns = [
     path('garage/api/', include(router.urls)),
     path('garage/admin/', admin.site.urls),
+    path('garage/admin/docs/', include('django.contrib.admindocs.urls')),
     path('garage/api/auth/register', GarageCreateViewSet.as_view({'post': 'create'})),
     path('garage/api/auth/login',  TokenObtainPairView.as_view(), name='api_token_auth'),
     path('garage/api/auth/token/refresh', TokenRefreshView.as_view(), name='token_refresh'),

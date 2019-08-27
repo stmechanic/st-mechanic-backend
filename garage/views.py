@@ -6,7 +6,7 @@ from rest_framework import status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
-from .models import Garage, Vehicle, Job, Rating
+from .models import Garage, Vehicle, Job, Rating, Quote, Mechanic
 from .serializers import GarageSerializer, VehicleSerializer, JobSerializer, RatingSerializer, QuoteSerializer, \
     MechanicSerializer
 
@@ -14,17 +14,19 @@ from .serializers import GarageSerializer, VehicleSerializer, JobSerializer, Rat
 class JobViewSet(viewsets.ModelViewSet):
     queryset = Job.objects.all().order_by('-date_created')
     serializer_class = JobSerializer
-    permission_classes = (IsAuthenticated, )
+    # permission_classes = (IsAuthenticated, )
 
 
 class VehicleViewSet(viewsets.ModelViewSet):
     queryset = Vehicle.objects.all()
     serializer_class = VehicleSerializer
+    # permission_classes = (IsAuthenticated, )
 
 
 class RatingViewSet(viewsets.ModelViewSet):
     serializer_class = RatingSerializer
-    permission_classes = (IsAuthenticated, )
+    # permission_classes = (IsAuthenticated, )
+    queryset = Rating.objects.all()
 
     def list(self, request, *args, **kwargs):
         queryset = Rating.objects.filter(job__garage=request.user)
@@ -34,7 +36,8 @@ class RatingViewSet(viewsets.ModelViewSet):
 
 class QuoteViewSet(viewsets.ModelViewSet):
     serializer_class = QuoteSerializer
-    permission_classes = (IsAuthenticated, )
+    # permission_classes = (IsAuthenticated, )
+    queryset = Quote.objects.all()
 
 
 class GarageCreateViewSet(viewsets.ModelViewSet):
@@ -45,7 +48,7 @@ class GarageCreateViewSet(viewsets.ModelViewSet):
 
     queryset = Garage.objects.all().order_by('-date_joined')
     serializer_class = GarageSerializer
-    permission_classes = (AllowAny,)
+    # permission_classes = (AllowAny,)
 
     def create(self, request, *args, **kwargs):
         data = request.data
@@ -78,5 +81,9 @@ class GarageCreateViewSet(viewsets.ModelViewSet):
 
 
 class MechanicViewSet(viewsets.ModelViewSet):
+    """
+    View for managing mechanics
+    """
     serializer_class = MechanicSerializer
-    permission_classes = (IsAuthenticated, )
+    # permission_classes = (IsAuthenticated, )
+    queryset = Mechanic.objects.all()

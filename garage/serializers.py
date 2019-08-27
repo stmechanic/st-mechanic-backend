@@ -20,6 +20,7 @@ class VehicleSerializer(serializers.ModelSerializer):
 class JobSerializer(serializers.ModelSerializer):
     class Meta:
         model = Job
+        fields = '__all__'
 
 
 class RatingSerializer(serializers.ModelSerializer):

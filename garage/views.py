@@ -6,9 +6,9 @@ from rest_framework import status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
-from .models import Garage, Vehicle, Job, Rating, Quote, Mechanic
+from .models import Garage, Vehicle, Job, Rating, Quote, Mechanic, Payment
 from .serializers import GarageSerializer, VehicleSerializer, JobSerializer, RatingSerializer, QuoteSerializer, \
-    MechanicSerializer
+    MechanicSerializer, PaymentSerializer
 
 
 class JobViewSet(viewsets.ModelViewSet):
@@ -87,3 +87,10 @@ class MechanicViewSet(viewsets.ModelViewSet):
     serializer_class = MechanicSerializer
     # permission_classes = (IsAuthenticated, )
     queryset = Mechanic.objects.all()
+
+
+class PaymentViewSet(viewsets.ModelViewSet):
+    """View for managing and tracking payments"""
+    serializer_class = PaymentSerializer
+    queryset = Payment.objects.all()
+
